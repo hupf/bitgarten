@@ -1,0 +1,23 @@
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare
+        run: |
+          rsync -av --include="fonts" --include="images" --include="index.html" --exclude="*" . dist/
+
+      - name: Deploy
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.SSH_USER }}
+          server: ${{ secrets.SSH_SERVER }}
+          port: ${{ secrets.SSH_PORT }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local_path: './dist/*'
+          remote_path: '/bitgarten.ch'
