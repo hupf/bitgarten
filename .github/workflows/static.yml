@@ -35,11 +35,14 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Prepare
         run: |
-          rsync -av --include="fonts" --include="images" --include="index.html" --exclude="*" . dist/
+          mkdir dist
+          cp index.html dist/
+          cp -r images/ dist/
+          cp -r fonts/ dist/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./dist"
+          path: "dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
